@@ -142,6 +142,25 @@ target_link_libraries(robot_localization_listener_node PRIVATE
   rclcpp::rclcpp
 )
 
+install(PROGRAMS
+  src/elias_arbeid/wheelodom.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME wheel_odom_node
+)
+
+install(PROGRAMS
+  src/elias_arbeid/imuodom.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME imu_odom_node
+)
+
+install(PROGRAMS
+  src/elias_arbeid/lidar_relay.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME lidar_node
+)
+
+
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_cmake_cppcheck REQUIRED)

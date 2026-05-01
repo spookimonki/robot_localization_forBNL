@@ -1,0 +1,59 @@
+# Robot Physical Measurements
+# Update these values with your actual robot measurements after hooking up the vehicle
+
+wheel_odom:
+  # Wheel dimensions
+  wheel_radius: 0.0275            # meters (UPDATE WITH REAL MEASUREMENT)
+  wheel_base: 0.2               # meters (distance between wheels, UPDATE WITH REAL MEASUREMENT)
+  
+  # Encoder specifications
+  encoder_resolution_m1: 2048    # ticks per revolution (motor 1)
+  encoder_resolution_m2: 2048    # ticks per revolution (motor 2)
+  
+  # Quality of service
+  encoder_queue_size: 5
+  publish_rate_hz: 10           # odometry publication frequency
+
+imu:
+  # IMU sensor
+  sensor_type: MPU6050          # or ICM20948, BNO055, etc.
+  i2c_address: 0x68             # 7-bit I2C address
+  i2c_bus: 1                    # Raspberry Pi I2C-1 (pins GPIO 2 & 3)
+  
+  # Accelerometer calibration (gravity component to remove)
+  gravity_m_s2: 9.80665
+  
+  # IMU mounting offset from base_link (if needed)
+  imu_offset_x: 0.0
+  imu_offset_y: 0.0
+  imu_offset_z: 0.0
+
+lidar:
+  # LD06 LiDAR over Raspberry Pi UART
+  uart_device: /dev/serial0     # UART alias for pins 8/10
+  uart_baudrate: 230400
+  frame_id: lidar_link
+
+gpio_pins:
+  # Encoder motor 1 (right wheel or primary)
+  encoder1_pin_a: 4             # BCM GPIO 4 (channel A)
+  encoder1_pin_b: 17            # BCM GPIO 17 (channel B)
+  
+  # Encoder motor 2 (left wheel or secondary)
+  encoder2_pin_a: 5             # BCM GPIO 5 (channel A)
+  encoder2_pin_b: 6             # BCM GPIO 6 (channel B)
+
+hardware_notes: |
+  Tracked vehicle with two motor encoders and one IMU.
+  - Encoders: quadrature (2-phase), read from GPIO interrupt pins
+  - Motor 1 (right): GPIO 4/17
+  - Motor 2 (left): GPIO 5/6
+  - IMU: I2C address 0x68 on I2C-1 (default for MPU6050)
+  - LiDAR: LD06 on Raspberry Pi UART pins 8 (TXD GPIO 14) and 10 (RXD GPIO 15), use /dev/serial0
+  
+  TODO: Measure and fill in actual values before first test:
+  - Wheel radius (use calipers, measure diameter / 2)
+  - Wheel base (measure center-to-center distance between wheels)
+  - Verify GPIO pin numbers match hardware wiring
+  - Test I2C presence: i2cdetect -y 1
+  - Confirm UART is enabled and /dev/serial0 points to the LiDAR

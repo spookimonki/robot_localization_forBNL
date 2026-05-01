@@ -19,22 +19,32 @@ from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
 import launch_ros.actions
 import os
+from typing import cast
 
 def generate_launch_description():
     autostart = DeclareLaunchArgument(
         'autostart',
         default_value='true',
         description='Automatically configure and activate the node. Set to false for managed lifecycle control.')
+    filtered_odom_topic = DeclareLaunchArgument(
+        'filtered_odom_topic',
+        default_value='/odom/calibrated',
+        description='Output topic for filtered odometry used by SLAM/localization.')
 
     return LaunchDescription([
         autostart,
+        filtered_odom_topic,
         launch_ros.actions.LifecycleNode(
             package='robot_localization',
             executable='ukf_node',
             name='ukf_filter_node',
             namespace='',
             output='screen',
-            autostart=LaunchConfiguration('autostart'),
+            autostart=cast(bool, LaunchConfiguration('autostart')),
             parameters=[os.path.join(get_package_share_directory("robot_localization"), 'params', 'ukf.yaml')],
+            remappings=[
+                ('accel/filtered', 'acceleration/filtered'),
+                ('odometry/filtered', LaunchConfiguration('filtered_odom_topic')),
+            ],
            ),
 ])

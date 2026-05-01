@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<robot name="tracked_robot_minimal">
+
+  <!-- Chassis: 28cm x 16.6cm x 10cm, base_link at its center -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.28 0.166 0.10"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.6 0.6 0.6 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.28 0.166 0.10"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Lidar link (visual only). Size doesn't affect Nav2; TF pose does. -->
+  <link name="lidar_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.0125" length="0.053"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0.2 0.2 1.0 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Lidar is centered in XY, and 10cm above ground => 5cm above base_link -->
+  <joint name="base_to_lidar" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="0.0 0.0 0.05" rpy="0 0 0"/>
+  </joint>
+
+  <!-- IMU link -->
+  <link name="imu_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <!-- 2.5cm x 2.3cm x 2mm -->
+        <box size="0.025 0.023 0.002"/>
+      </geometry>
+      <material name="red">
+        <color rgba="1.0 0.2 0.2 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- IMU centered in XY, 5.3cm above ground => 0.3cm above base_link -->
+  <joint name="base_to_imu" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0.0 0.0 0.003" rpy="0 0 0"/>
+  </joint>
+
+</robot>
